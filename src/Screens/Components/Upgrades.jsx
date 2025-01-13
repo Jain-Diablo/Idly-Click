@@ -1,9 +1,10 @@
 import React from 'react';
 
-function Upgrades({ onUpgrade }) {
+function Upgrades({ onUpgrade, gg, hh }) {
+    var temp_price= 10
     const upgrades = [
-        { id: 1, name: "Power", price: "$0.99", upgradeKey: "power" },
-        { id: 2, name: "Exponent", price: "$0.79", upgradeKey: "exponent" },
+        { id: 1, name: "Power", price: temp_price, upgradeKey: "power" },
+        { id: 2, name: "Exponent", price: temp_price, upgradeKey: "exponent" },
     ];
 
     const UpgradeCard = ({ upgrade }) => (
@@ -15,8 +16,8 @@ function Upgrades({ onUpgrade }) {
                     >
                         {upgrade.name}
                     </button>
-                    <button className="btn btn-outline-dark w-100"  onClick={() => onUpgrade(upgrade.upgradeKey)} >
-                        {upgrade.price}
+                    <button className="btn btn-outline-dark w-100"  onClick={() => {onUpgrade(upgrade.upgradeKey)}} >
+                        {upgrade.upgradeKey === "power" ? `${(gg).toFixed(2)}` : `${(hh).toFixed(2)}` }
                     </button>
                 </div>
             </div>
