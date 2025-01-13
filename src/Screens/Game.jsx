@@ -48,10 +48,23 @@ function Game() {
     setIsDrawerOpen(false);
   };
 
+
+  const handleUpgrade = (upgradeKey) => {
+    if (upgradeKey === "power" ) {
+        setPower(power + 1);
+        setPoint(point - 5);
+    } else if (upgradeKey === "exponent") {
+        setExpo(exponent + 0.01);
+        setPoint(point - 10);
+    } else {
+        alert("Not enough points for upgrade!");
+    }
+};
+
   const renderDrawerContent = () => {
     switch (drawerContent) {
       case "Upgrades":
-        return <Upgrades/> ;
+        return <Upgrades onUpgrade={handleUpgrade}/> ;
 
       case "Achievements":
         return <Gains />;

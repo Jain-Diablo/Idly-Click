@@ -1,17 +1,23 @@
 import React from 'react';
 
-function Upgrades() {
+function Upgrades({ onUpgrade }) {
     const upgrades = [
-        { id: 1, name: "Power", price: "$0.99" },
-        { id: 2, name: "Exponent", price: "$0.79" },
+        { id: 1, name: "Power", price: "$0.99", upgradeKey: "power" },
+        { id: 2, name: "Exponent", price: "$0.79", upgradeKey: "exponent" },
     ];
 
     const UpgradeCard = ({ upgrade }) => (
         <div className="col-md-6 mb-3">
             <div className="card border-0 shadow h-100">
                 <div className="card-body text-center">
-                    <button className="btn btn-success w-100 mb-2">{upgrade.name}</button>
-                    <button className="btn btn-outline-dark w-100">{upgrade.price}</button>
+                    <button
+                        className="btn btn-success w-100 mb-2 "disabled
+                    >
+                        {upgrade.name}
+                    </button>
+                    <button className="btn btn-outline-dark w-100"  onClick={() => onUpgrade(upgrade.upgradeKey)} >
+                        {upgrade.price}
+                    </button>
                 </div>
             </div>
         </div>
