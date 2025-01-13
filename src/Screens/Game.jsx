@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GrUpgrade } from "react-icons/gr";
 import { FaAward, FaCartShopping, FaWallet } from "react-icons/fa6";
 import { IoIosHelpCircle } from "react-icons/io";
@@ -12,32 +12,53 @@ import Guide from "./Components/Guide";
 
 function Game() {
   const [count, setCount] = useState(0);
-  const [ptemp, setPtemp] = useState(50);
-  const [etemp, setEtemp] = useState(50);
+  const [tempPointsPrice, settempPointsPrice] = useState(50);
+  const [tempExponentPrice, settempExponentPrice] = useState(10000);
   const [point, setPoint] = useState(0);
-  const [exponent, setExpo] = useState(1.01);
+  const [exponent, setExpo] = useState(1.00);
   const [power, setPower] = useState(1);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [drawerContent, setDrawerContent] = useState("");
+  const [achievements, setAchievements] = useState([
+    { id: 1, title: "1,000 Clicks", description: "Click 1000 times", bonus: "+10% points", completed: false },
+    { id: 2, title: "10,000 Points", description: "Reach 10,000 total points", bonus: "+10% points", completed: false },
+    { id: 3, title: "Impressive Power", description: "Achieve 100 power", bonus: "+10% points", completed: false },
+    { id: 4, title: "Gargantuan Exponent", description: "Achieve 1.10 exponent", bonus: "+10% points", completed: false },
+  ]);
+  
 
   function handleClick() {
+    // Calculate the multiplier based on completed achievements
+    const completedAchievements = achievements.filter((achievement) => achievement.completed).length;
+    const multiplier = 1 + completedAchievements * 0.1; // 10% per achievement
+  
     setCount(count + 1);
-    setPoint(Math.pow(count + power, exponent));
-
+  
+    // Apply the multiplier to the calculated points
+    const temp = Math.pow(power, exponent) * multiplier;
+    setPoint(point + temp);
+  
     setIsAnimating(true);
-
+  
     setTimeout(() => setIsAnimating(false), 500);
   }
 
-  function upgradePower() {
-    setPower(power + 1);
-    setPoint(point - 5);
-  }
-
-  function upgradeExpo() {
-    setExpo(exponent + 0.01);
-  }
+  useEffect(() => {
+    if(count === 1000){
+      setAchievements((prevAchievements) => 
+        prevAchievements.map((achievement, index) =>
+          index === 0 ? { ...achievement, completed: true } : achievement
+        )
+      );
+    } else if (point >= 10000){
+      setAchievements((prevAchievements) => 
+        prevAchievements.map((achievement, index) =>
+          index === 1 ? { ...achievement, completed: true } : achievement
+        )
+      );
+    }
+  }, [count])
 
   // Open Drawer
   const showDrawer = (content) => {
@@ -52,26 +73,33 @@ function Game() {
 
 
   const handleUpgrade = (upgradeKey) => {
-    if (upgradeKey === "power" ) {
+    if (upgradeKey === "power") {
+      if (point > tempPointsPrice && point-tempPointsPrice >= 0) {
         setPower(power + 1);
-        setPoint(point - ptemp);
-        setPtemp(ptemp + 5);
-      } else if (upgradeKey === "exponent") {
+        setPoint(point - tempPointsPrice);
+        settempPointsPrice(tempPointsPrice + 50);
+      } else {
+        alert("you do not have enough points")
+      }
+    } else if (upgradeKey === "exponent") {
+      if (point > tempExponentPrice && point-tempExponentPrice >= 0) {
         setExpo(exponent + 0.01);
-        setPoint(point - etemp);
-        setEtemp(etemp + 5);
-    } else {
-        alert("Not enough points for upgrade!");
+        setPoint(point - tempExponentPrice);
+        settempExponentPrice(tempExponentPrice + 5000);
+      } else {
+        alert("you do not have enough points")
+      }
     }
-};
+
+  };
 
   const renderDrawerContent = () => {
     switch (drawerContent) {
       case "Upgrades":
-        return <Upgrades onUpgrade={handleUpgrade} gg={ptemp} hh={etemp}/> ;
+        return <Upgrades onUpgrade={handleUpgrade} gg={tempPointsPrice} hh={tempExponentPrice} />;
 
       case "Achievements":
-        return <Gains />;
+        return <Gains achievement={achievements}/>;
 
       case "Shop":
         return <Shop />;
