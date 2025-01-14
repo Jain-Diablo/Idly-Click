@@ -57,6 +57,18 @@ function Game() {
           index === 1 ? { ...achievement, completed: true } : achievement
         )
       );
+    } else if (power >= 100){
+      setAchievements((prevAchievements) => 
+        prevAchievements.map((achievement, index) =>
+          index === 2 ? { ...achievement, completed: true } : achievement
+        )
+      );
+    }else if (exponent >= 1.10){
+      setAchievements((prevAchievements) => 
+        prevAchievements.map((achievement, index) =>
+          index === 3 ? { ...achievement, completed: true } : achievement
+        )
+      );
     }
   }, [count])
 
